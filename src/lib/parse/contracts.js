@@ -84,6 +84,7 @@ export type Example = {
 export type BodyDescriptor = {
     schema?: string,
     body?: string,
+    // name is what the apib parser calls the status code
     name: string,
 };
 
@@ -245,12 +246,6 @@ const getSchema = (body: BodyDescriptor): ?JsonSchema => {
     return validatedBody.schema;
 };
 
-const validateResponse = (fixtureBody: BodyDescriptor, contractResponse: Response): BodyValidationResult => {
-    if (fixtureBody.name !== contractResponse.status) {
-        return {valid: false, message: `Http status code does not match: fixture=${fixtureBody.name} contract=${contractResponse.status}`};
-    }
-    return validateBody(fixtureBody, contractResponse.schema)
-};
 
 const validateBody = (fixtureBody?: BodyDescriptor, contractSchema: JsonSchema): BodyValidationResult => {
     let result: BodyValidationResult;
@@ -301,10 +296,10 @@ const removeInvalidFixtures = (resource: BlueprintResource, contractActions: ?Ac
             if (example.requests.length > 1 ||  example.responses.length > 1) {
                 throw new Error(`Found more than one request or response for example ${exampleIndex}. Requests and responses expected in pairs.`);
             }
-            const request = example.requests[0];
-            const response = example.responses[0];
+            const fixtureRequest = example.requests[0];
+            const fixtureResponse = example.responses[0];
 
-            const requestValid = validateBody(request, contractAction.request);
+            const requestValid = validateBody(fixtureRequest, contractAction.request);
 
             if (!requestValid.valid) {
                 logger.error(`${fixtureAction.method} ${resource.uriTemplate} example[${exampleIndex}] request ${requestValid.message}`);
@@ -315,17 +310,23 @@ const removeInvalidFixtures = (resource: BlueprintResource, contractActions: ?Ac
             let responseValid = false;
             const errors = [];
             for (let i = 0; i < contractAction.responses.length; i++) {
-                const bodyValidationResult = validateResponse(response, contractAction.responses[i]);
-                if (bodyValidationResult.valid) {
+                const contractResponse = contractAction.responses[i];
+                if (fixtureResponse.name !== contractResponse.status) {
+                    errors.push(`For contract response[${i}]: Http status code does not match: fixture=${fixtureResponse.name} contract=${contractResponse.status}`);
+                    continue;
+                }
+
+                const validationResult = validateBody(fixtureResponse, contractResponse.schema);
+                if (validationResult.valid) {
                     responseValid = true;
                     break;
                 }
-                errors.push(`For contract response[${i}]: ${bodyValidationResult.message}`);
+                errors.push(`For contract response[${i}]: ${validationResult.message}`);
             }
             if (responseValid) {
                 validExamples.push({
-                    requests: [request],
-                    responses: [response]
+                    requests: [fixtureRequest],
+                    responses: [fixtureResponse]
                 });
             } else {
                 logger.error(`${fixtureAction.method} ${resource.uriTemplate} example[${exampleIndex}] response matches no contract response:\n\t${errors.join('\n\t')}`);
