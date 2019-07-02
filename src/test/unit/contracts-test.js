@@ -196,11 +196,9 @@ describe('parseContracts', () => {
                     };
 
                     parseBlueprintStub.withArgs(blueprintContents).returns(parsedBlueprint);
-                    const log = sinon.spy(logger, 'info');
+                    const log = sinon.spy(logger, 'warn');
 
                     await contracts.parseContracts(mapping);
-
-                    parseBlueprintStub.withArgs(blueprintContents).returns(parsedBlueprint);
                     assert.equal(log.getCall(0).args[0], 'Warnings for contract "contract":\n \twarning message. See: "co"');
                 });
             });

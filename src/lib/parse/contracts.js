@@ -243,13 +243,8 @@ const getSchema = (body: BodyDescriptor): ?JsonSchema => {
 
     const validatedBody: BodyDescriptor = schemaValidator.validateAndParseSchema(body);
     return validatedBody.schema;
-}
-
-type BodyMetadata = {
-    method: string,
-    url: string,
-    exampleIndex: number,
 };
+
 const validateResponse = (fixtureBody: BodyDescriptor, contractResponse: Response): BodyValidationResult => {
     if (fixtureBody.name !== contractResponse.status) {
         return {valid: false, message: `Http status code does not match: fixture=${fixtureBody.name} contract=${contractResponse.status}`};
@@ -301,48 +296,39 @@ const removeInvalidFixtures = (resource: BlueprintResource, contractActions: ?Ac
         const validExamples: Array<Example> = [];
 
         fixtureAction.examples.forEach((example, exampleIndex) => {
-            const validRequests: Array<BodyDescriptor> = [];
-            const validResponses: Array<BodyDescriptor> = [];
 
-            //expect requests and responses in pairs - otherwise it is hard to reason about author's expectations
+            //enforce requests and responses in pairs - otherwise it is hard to reason about author's expectations
             if (example.requests.length > 1 ||  example.responses.length > 1) {
                 throw new Error(`Found more than one request or response for example ${exampleIndex}. Requests and responses expected in pairs.`);
             }
-
-            const metadata: BodyMetadata = { method: fixtureAction.method, url: resource.uriTemplate, exampleIndex };
-
             const request = example.requests[0];
+            const response = example.responses[0];
+
             const requestValid = validateBody(request, contractAction.request);
 
             if (!requestValid.valid) {
-                logger.error(`${metadata.method} ${metadata.url} example[${metadata.exampleIndex}] request ${requestValid.message}`);
+                logger.error(`${fixtureAction.method} ${resource.uriTemplate} example[${exampleIndex}] request ${requestValid.message}`);
                 // if request isn't valid we don't care if responses are
                 return;
             }
-            let validatedResponses = example.responses.filter ( response => {
-                const errors = [];
-                for (let i = 0; i < contractAction.responses.length; i++) {
-                    const bodyValidationResult = validateResponse(response, contractAction.responses[i]);
-                    if (bodyValidationResult.valid) {
-                        return true;
-                    }
-                    errors.push(`For contract response[${i}]: ${bodyValidationResult.message}`);
+
+            let responseValid = false;
+            const errors = [];
+            for (let i = 0; i < contractAction.responses.length; i++) {
+                const bodyValidationResult = validateResponse(response, contractAction.responses[i]);
+                if (bodyValidationResult.valid) {
+                    responseValid = true;
+                    break;
                 }
-                // response does not match anything in contract
-                logger.error(`${metadata.method} ${metadata.url} example[${metadata.exampleIndex}] response matches no contract response:\n\t${errors.join('\n\t')}`);
-                return false;
-            });
-
-            if (validatedResponses.length) {
-                validRequests.push(request);
-                validResponses.push(...validatedResponses)
+                errors.push(`For contract response[${i}]: ${bodyValidationResult.message}`);
             }
-
-            if (validRequests.length || validResponses.length) {
+            if (responseValid) {
                 validExamples.push({
-                    requests: validRequests,
-                    responses: validResponses
+                    requests: [request],
+                    responses: [response]
                 });
+            } else {
+                logger.error(`${fixtureAction.method} ${resource.uriTemplate} example[${exampleIndex}] response matches no contract response:\n\t${errors.join('\n\t')}`);
             }
         });
 
