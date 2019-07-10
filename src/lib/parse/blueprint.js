@@ -5,7 +5,6 @@ var _ = require('lodash');
 var pathToRegexp = require('path-to-regexp');
 
 var urlParser = require('./url');
-var parseParameters = require('./parameters');
 var parseAction = require('./action');
 let contracts = require('./contracts');
 var logger = require('../logging/logger');
@@ -69,9 +68,16 @@ module.exports = function(filePath: string, autoOptions: boolean, routeMap: {}, 
                 var parsedUrl = urlParser.parse(resource.uriTemplate);
                 var key = parsedUrl.url;
                 routeMap[key] = routeMap[key] || { urlExpression: key, methods: {} };
-                parseParameters(parsedUrl, resource.parameters, routeMap);
+                const queryParamKeys = Object.keys(parsedUrl.queryParams);
+                let queryParams = {};
+                // resource parameters contains both path and query params
+                resource.parameters && resource.parameters.forEach(param => {
+                    if (queryParamKeys.includes(param)) {
+                        queryParams[param.name] = param;
+                    }
+                });
                 resource.actions.forEach(function(action){
-                    parseAction(parsedUrl, action, routeMap);
+                    parseAction(parsedUrl, action, routeMap, queryParams);
                     saveRouteToTheList(parsedUrl, action);
                 });
             }

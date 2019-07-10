@@ -13,7 +13,7 @@ See [Blueprint API - URI parameters section](https://github.com/apiaryio/api-blu
     + Body
 
             {
-              "id": "raw"
+              "id": "no_params"
             }
 
 ## Things [/api/query{?param1}]

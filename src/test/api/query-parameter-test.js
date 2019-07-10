@@ -15,7 +15,7 @@ describe('Query Parameters', function(){
             request.get('/api/query')
             .expect(200)
             .expect('Content-type', 'application/json;charset=UTF-8')
-            .expect({id: 'raw'})
+            .expect({id: 'no_params'})
             .end(helper.endCb(done));
         });
     });

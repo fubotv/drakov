@@ -1,7 +1,16 @@
-var _ = require('lodash');
+let _ = require('lodash');
+let logger = require('./logging/logger');
 
-exports.noParamComparator = function(a, b){
-    return (Object.keys(a.parsedUrl.queryParams).length - Object.keys(b.parsedUrl.queryParams).length);
+exports.filterForRequired = function (req, handlers) {
+    return handlers.filter(handler => {
+        for (let paramName in handler.queryParams) {
+            if (handler.queryParams[paramName].required && !req.query.hasOwnProperty(paramName)) {
+                logger.debug(`Matching by query param: ${paramName} ${'NOT_MATCHED'.red}`);
+                return false;
+            }
+        }
+        return true;
+    });
 };
 
 exports.queryParameterComparator = function(a, b){
@@ -14,7 +23,7 @@ exports.queryParameterComparator = function(a, b){
     return (b.matchingQueryParams - a.matchingQueryParams);
 };
 
-exports.countMatchingQueryParms = function (handlers, reqQueryParams){
+exports.countMatchingQueryParams = function (handlers, reqQueryParams){
     handlers.forEach(function(handler){
         handler.matchingQueryParams = 0;
         handler.exactMatchingQueryParams = 0;
