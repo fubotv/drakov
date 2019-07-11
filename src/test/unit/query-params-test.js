@@ -5,13 +5,37 @@ describe('Query params', function() {
 
     describe('filterForRequired', () => {
         it('should remove any handler where a required param is missing from the request', () => {
-            const matchingHandler = {queryParams:  {param1: {name: 'param1', required: true }}};
-            const nonMatchingHandler = {queryParams: {param2: {name: 'param2', required: true }}};
+            const matchingHandler = {queryParamsInfo:  {param1: {name: 'param1', required: true }}};
+            const nonMatchingHandler = {queryParamsInfo: {param2: {name: 'param2', required: true }}};
 
             const handlers = [matchingHandler, nonMatchingHandler];
             const expected = [matchingHandler];
 
             const actual = queryComparator.filterForRequired({query: {param1: 'abc'}}, handlers);
+            assert.deepStrictEqual(actual, expected);
+
+        });
+
+        it('should remove any handler where a required param is has the wrong type from the request', () => {
+            const matchingHandler = {queryParamsInfo:  {param1: {name: 'param1', required: true }}};
+            const nonMatchingHandler = {queryParamsInfo: {param2: {name: 'param2', required: true, type: "number" }}};
+
+            const handlers = [matchingHandler, nonMatchingHandler];
+            const expected = [matchingHandler];
+
+            const actual = queryComparator.filterForRequired({query: {param1: 'abc', param2: 'yyz'}}, handlers);
+            assert.deepStrictEqual(actual, expected);
+
+        });
+
+        it('should keep any handler where a non required param is has the wrong type from the request', () => {
+            const matchingHandler = {queryParamsInfo:  {param1: {name: 'param1', required: true }}};
+            const nonMatchingHandler = {queryParamsInfo: {param2: {name: 'param2', required: false, type: "number" }}};
+
+            const handlers = [matchingHandler, nonMatchingHandler];
+            const expected = [matchingHandler, nonMatchingHandler];
+
+            const actual = queryComparator.filterForRequired({query: {param1: 'abc', param2: 'yyz'}}, handlers);
             assert.deepStrictEqual(actual, expected);
 
         });

@@ -72,7 +72,7 @@ module.exports = function(filePath: string, autoOptions: boolean, routeMap: {}, 
                 let queryParams = {};
                 // resource parameters contains both path and query params
                 resource.parameters && resource.parameters.forEach(param => {
-                    if (queryParamKeys.includes(param)) {
+                    if (queryParamKeys.includes(param.name)) {
                         queryParams[param.name] = param;
                     }
                 });

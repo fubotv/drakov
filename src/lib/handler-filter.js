@@ -33,12 +33,7 @@ exports.filterHandlers = function (req, handlers, ignoreHeaders) {
 
         filteredHandlers = urlQueryParams.filterForRequired(req, handlers);
         let queryParams = req.query;
-        // if (Object.keys(queryParams).length === 0) {
-        //     handlers.sort(urlQueryParams.noParamComparator);
-        // } else {
         urlQueryParams.countMatchingQueryParams(handlers, queryParams);
-            // handlers.sort(urlQueryParams.queryParameterComparator);
-        // }
 
         filteredHandlers = filteredHandlers.filter(filterRequestHeader(req, ignoreHeaders));
 

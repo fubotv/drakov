@@ -19,7 +19,7 @@ exports.getRouteHandlers = function (parsedUrl, action, queryParams) {
         let obj = {
             action: action,
             parsedUrl: parsedUrl,
-            queryParams: queryParams,
+            queryParamsInfo: queryParams,
             response: example.responses[0],
             request: 'undefined' === typeof example.requests[0] ? null : specSchema.validateAndParseSchema(example.requests[0]),
             execute: function (req, res) {

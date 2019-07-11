@@ -22,6 +22,8 @@ module.exports = function (options, cb) {
                 var match = regex.exec(req.path);
 
                 if (match) {
+                   // TODO: actually validate parameter types here
+
                     logger.debug('Matching by url pattern:', urlPattern.yellow, 'MATCHED'.green);
                     var handlers = routeMap[urlPattern].methods[req.method.toUpperCase()];
                     if (handlers && handlers.length) {
