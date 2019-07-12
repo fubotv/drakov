@@ -70,12 +70,16 @@ module.exports = function(filePath: string, autoOptions: boolean, routeMap: {}, 
                 routeMap[key] = routeMap[key] || { urlExpression: key, methods: {} };
                 const queryParamKeys = Object.keys(parsedUrl.queryParams);
                 let queryParams = {};
+                let pathParams = {}
                 // resource parameters contains both path and query params
                 resource.parameters && resource.parameters.forEach(param => {
                     if (queryParamKeys.includes(param.name)) {
                         queryParams[param.name] = param;
+                    } else {
+                        pathParams[param.name] = param;
                     }
                 });
+                routeMap[key].pathParams = pathParams;
                 resource.actions.forEach(function(action){
                     parseAction(parsedUrl, action, routeMap, queryParams);
                     saveRouteToTheList(parsedUrl, action);
