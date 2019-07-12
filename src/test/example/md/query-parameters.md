@@ -124,3 +124,34 @@ See [Blueprint API - URI parameters section](https://github.com/apiaryio/api-blu
             {
                "id": "parameter1_key1_12345_key2_6789"
             }
+
+## Things [/api/query{?boolparam}]
+
++ Parameters
+    + boolparam (boolean) ... Parameter for the request
+
+### Get with query parameter [GET]
+
++ Response 200 (application/json;charset=UTF-8)
+
+    + Body
+
+            {
+               "id": "boolean"
+            }
+
+
+## Things [/api/query{?numberparam}]
+
++ Parameters
+    + numberparam (number) ... Parameter for the request
+
+### Get with query parameter [GET]
+
++ Response 200 (application/json;charset=UTF-8)
+
+    + Body
+
+            {
+               "id": "boolean"
+            }

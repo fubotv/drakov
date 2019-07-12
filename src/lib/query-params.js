@@ -43,6 +43,7 @@ exports.countMatchingQueryParams = function (handlers, reqQueryParams) {
             const type = getType(param, handler.queryParamsInfo );
             if (reqQueryParams.hasOwnProperty(param)) {
                 var reqValue = reqQueryParams[param];
+                //  this prioritizes literal values in the blueprint url
                 if (_.isEqual(value, reqValue)) {
                     handler.matchingQueryParams += 1;
                     handler.exactMatchingQueryParams += 1;
