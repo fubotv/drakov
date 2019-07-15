@@ -23,7 +23,7 @@ module.exports = function (options, cb) {
                 var match = regex.exec(req.path);
 
                 if (match) {
-                    let paramValues = mapMatchesToKeys(match, regex.keys);
+                    let paramValues = mapParameterNamesToCapturedValues(match, regex.keys);
                     const specParams = routeMap[urlPattern].pathParams;
                     for (let paramName in specParams) {
                         if (!types.typeMatches(paramValues[paramName], specParams[paramName].type)) {
@@ -57,7 +57,7 @@ module.exports = function (options, cb) {
 
 };
 
-function mapMatchesToKeys(match, keys) {
+function mapParameterNamesToCapturedValues(match, keys) {
     let matches = {};
     keys.forEach((key, i) => {
         // the first match is always the full url

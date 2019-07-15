@@ -38,9 +38,9 @@ drakov will check that the parameters can be properly coerced into the listed ty
 cause the endpoint to not be found.
 
 ### Endpoint matching priorities
-In the case that multiple version of an endpoint satisfy the required attributes, drakov pick the best match in the following order:
-1. Highest number of matching headers
-2. Query parameters with literal values
+In the case that multiple version of an endpoint satisfy the required attributes, drakov picks the best match in the following order:
+1. Highest number of matching headers (Currently only exact value matches are supported)
+2. Query parameters that match literal values in the fixture url
 3. Highest number of total matching query parameters (including optional)
 4. Lowest number of missing optional query parameters
 
