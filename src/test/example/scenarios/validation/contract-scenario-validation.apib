@@ -83,7 +83,52 @@ Bad request good response
             }
         ```
 
-## Request with path parameter [/demo/path-param]
+## Request with path parameter specified wrong type [/demo/path-param]
+
+### Get note by param [GET] 
++ Response 200 (application/json)
+
+    + Body
+
+        ```json
+            {
+                "question": "Who?",
+                "choices": ["path param", "Not Me!"]
+            }
+        ```
+
+## Request with path parameter specified correct type [/demo/123]
+
+### Get note by param [GET] 
++ Response 200 (application/json)
+
+    + Body
+
+        ```json
+            {
+                "question": "Who?",
+                "choices": ["234", "Not Me!"]
+            }
+        ```
+
+## Request with path parameter left as variable but not specified [/demo1/{pathparam}]
+
+### Get note by param [GET] 
++ Response 200 (application/json)
+
+    + Body
+
+        ```json
+            {
+                "question": "Who?",
+                "choices": ["this should not be served", "Not Me!"]
+            }
+        ```
+
+## Request with path parameter left as variable specified correctly [/demo/{pathparam}]
+
++ Parameters
+    + pathparam (number)
 
 ### Get note by param [GET] 
 + Response 200 (application/json)
@@ -97,7 +142,8 @@ Bad request good response
             }
         ```
 
-## Request with missing property in response body [/demo/missing]
+
+## Request with missing property in response body [/demo/missing/missing]
 
 ### Get With non-matching body [GET] 
 + Response 200 (application/json)

@@ -60,8 +60,41 @@ describe('Contract Fixture Validation', () => {
                     .end(done);
             });
 
-            it('valid GET demo with path param /demo/path-param is served', (done) => {
+            it('invalid valid GET demo with path param /demo/path-param is served', (done) => {
                 request.get('/demo/path-param')
+                    .expect(200)
+                    .expect({
+                        "question": "Who?",
+                        "choices": ["path param", "Not Me!"]
+                    })
+                    .end(done);
+            });
+
+
+            it('valid GET demo with path param /demo/123 is served', (done) => {
+                request.get('/demo/123')
+                    .expect(200)
+                    .expect({
+                        "question": "Who?",
+                        "choices": ["234", "Not Me!"]
+                    })
+                    .end(done);
+            });
+
+
+            it('invalid GET demo with path param /demo/asd is served', (done) => {
+                request.get('/demo1/asd')
+                    .expect(200)
+                    .expect({
+                        "question": "Who?",
+                        "choices": ["this should not be served", "Not Me!"]
+                    })
+                    .end(done);
+            });
+
+
+            it('valid GET demo with path param /demo/456 is served', (done) => {
+                request.get('/demo/456')
                     .expect(200)
                     .expect({
                         "question": "Who?",
@@ -71,7 +104,7 @@ describe('Contract Fixture Validation', () => {
             });
 
             it('invalid GET bad response demo/missing is served', (done) => {
-                request.get('/demo/missing')
+                request.get('/demo/missing/missing')
                     .expect(200)
                     .expect({
                         "question": "?"
@@ -159,8 +192,33 @@ describe('Contract Fixture Validation', () => {
                     .end(done);
             });
 
-            it('valid GET demo with path param /demo/path-param is served', (done) => {
+            it('invalid valid GET demo with path param /demo/path-param is returns client error', (done) => {
                 request.get('/demo/path-param')
+                    .expect(400)
+                    .end(done);
+            });
+
+
+            it('valid GET demo with path param /demo/123 is served', (done) => {
+                request.get('/demo/123')
+                    .expect(200)
+                    .expect({
+                        "question": "Who?",
+                        "choices": ["234", "Not Me!"]
+                    })
+                    .end(done);
+            });
+
+
+            it('invalid GET demo with path param /demo/asd is NOT served', (done) => {
+                request.get('/demo1/asd')
+                    .expect(404)
+                    .end(done);
+            });
+
+
+            it('valid GET demo with path param /demo/456 is served', (done) => {
+                request.get('/demo/456')
                     .expect(200)
                     .expect({
                         "question": "Who?",
@@ -170,7 +228,7 @@ describe('Contract Fixture Validation', () => {
             });
 
             it('invalid GET bad response demo/missing is NOT served', (done) => {
-                request.get('/demo/missing')
+                request.get('/demo/missing/missing')
                     .expect(404)
                     .end(done);
             });

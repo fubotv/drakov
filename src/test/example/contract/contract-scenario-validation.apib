@@ -141,9 +141,42 @@
              
             }
         ```
-## Request with path parameter [/demo/:pathparam]
+## Request with path parameter as number [/demo/{pathparam}]
+
++ Parameters
+    + pathparam (number)
 
 ### Get note by param [GET] 
++ Response 200 (application/json)
+
+    + Schema
+    
+        ```json
+            {
+              "$schema": "http://json-schema.org/draft-07/schema#",
+              "required": ["question", "choices"],
+              "type": "object",
+              "properties": {
+                "question": {
+                  "type": "string"
+                },
+                "choices": {
+                  "type": "array",
+                  "items": {
+                    "type": "string"
+                  },
+                  "minItems": 2
+                }
+              }
+             
+            }
+        ```
+## Request with path parameter as number [/demo1/{pathparam}]
+
++ Parameters
+    + pathparam (number)
+
+### Get note by param abc [GET] 
 + Response 200 (application/json)
 
     + Schema
