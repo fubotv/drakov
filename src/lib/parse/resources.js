@@ -116,7 +116,7 @@ const selectAndValidateResource = function (fixtureParsedUrl: ParsedUrl, fixture
     //no match
 };
 
-function validatePathParams(contractResource, reqPathParams, fixtureParams) {
+function validatePathParams(contractResource: Resource, reqPathParams: {}, fixtureParams: Array<Parameter>) {
     const errors = [];
     //only need to validate parameters listed on the contract
     for (let specParamName in contractResource.pathParams) {
@@ -137,7 +137,7 @@ function validatePathParams(contractResource, reqPathParams, fixtureParams) {
     return errors;
 }
 
-function validateQueryParams(contractResource, fixtureParsedUrl, fixtureParams) {
+function validateQueryParams(contractResource: Resource, fixtureParsedUrl: ParsedUrl, fixtureParams: Array<Parameter>) {
     const errors = [];
     for (let specParamName in contractResource.queryParams) {
         const specParam = contractResource.queryParams[specParamName];
