@@ -122,7 +122,7 @@ describe('Contract Fixture Validation', () => {
                     .end(done);
             });
 
-            it('resource not in contract is served', (done) => {
+            it('Resource with a fixture not in the contract is served', (done) => {
                 request.get('/unknown')
                     .expect(200)
                     .expect({
@@ -241,7 +241,7 @@ describe('Contract Fixture Validation', () => {
                     .end(done);
             });
 
-            it('resource not in contract is served', (done) => {
+            it('Resource with a fixture not in contract is not served', (done) => {
                 request.get('/unknown')
                     .expect(404)
                     .end(helper.endCb(done));
