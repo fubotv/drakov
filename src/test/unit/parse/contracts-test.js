@@ -80,10 +80,10 @@ describe('parseContracts', () => {
 
     beforeEach(() => {
         const parsedUrl: ParsedUrl = {
-            url: '/sample-url',
+            url: '/sample-url/:somePath',
             queryParams: {
                 someQuery: "",
-            }
+            },
         };
 
         urlStub = sinon.stub(urlParser, 'parse');
@@ -172,7 +172,7 @@ describe('parseContracts', () => {
             const expected: Contract = {
                 fixtureFolders: ['fixture'],
                 resources: {
-                    '/sample-url': {
+                    '/sample-url/:somePath': {
                         pathParams: {
                             somePath: {
                                 name: "somePath",
@@ -346,7 +346,7 @@ describe('parseContracts', () => {
 
                     parseBlueprintStub.withArgs(blueprintContents).returns(parsedBlueprint);
                     assert.deepEqual(await contracts.parseContracts(mapping), [expected]);
-                    assert.equal(error.getCall(0).args[0], 'No request/response pairs found for: PUT "/sample-url"');
+                    assert.equal(error.getCall(0).args[0], 'No request/response pairs found for: PUT "/sample-url/:somePath"');
                 });
             });
 
@@ -382,7 +382,7 @@ describe('parseContracts', () => {
 
                     parseBlueprintStub.withArgs(blueprintContents).returns(parsedBlueprint);
                     assert.deepEqual(await contracts.parseContracts(mapping), [expected]);
-                    assert.equal(error.getCall(0).args[0], 'POST "/sample-url" is defined more than once; ignoring additional schema');
+                    assert.equal(error.getCall(0).args[0], 'POST "/sample-url/:somePath" is defined more than once; ignoring additional schema');
                 });
             });
 
@@ -487,7 +487,7 @@ describe('removeInvalidFixtures', () => {
             const getAction: BlueprintAction = {
                 method: 'GET',
                 examples: [{
-                    requests: [{name: '', headers: ""}],
+                    requests: [{name: '', headers: []}],
                     responses: [{name: '', body: fixtureBody}]
                 }],
             };
