@@ -189,8 +189,10 @@ describe('parseContracts', () => {
                         },
                         actions: {
                             'POST': {
-
-                                request: 'request schema',
+                                request: {
+                                    headers: [],
+                                    schema: 'request schema',
+                                },
                                 responses: [{status: "200", schema: 'response schema'}]
                             }
                         }
@@ -401,8 +403,11 @@ describe('removeInvalidFixtures', () => {
     const contractActions: Actions = {
         'POST': {
             request: {
-                "$schema": "http://json-schema.org/draft-07/schema#",
-                "type": "object"
+                headers: [],
+                schema: {
+                    "$schema": "http://json-schema.org/draft-07/schema#",
+                    "type": "object"
+                },
             },
             responses: [
                 {
@@ -443,7 +448,10 @@ describe('removeInvalidFixtures', () => {
             ],
         },
         'GET': {
-            request: null,
+            request: {
+                schema: null,
+                headers: [],
+            },
             responses: [{
                 status: "",
                 schema: {
@@ -503,10 +511,10 @@ describe('removeInvalidFixtures', () => {
                 .returns({valid: true});
             matchWithSchemaStub.withArgs(parsedBody, contractActions['POST'].responses[1].schema)
                 .returns({valid: true});
-            matchWithSchemaStub.withArgs(parsedBody, contractActions['POST'].request)
+            matchWithSchemaStub.withArgs(parsedBody, contractActions['POST'].request.schema)
                 .returns({valid: true});
 
-            matchWithSchemaStub.withArgs(parsedBody, contractActions['GET'].request)
+            matchWithSchemaStub.withArgs(parsedBody, contractActions['GET'].request.schema)
                 .returns({valid: true});
 
             assert.deepEqual(contracts.removeInvalidFixtures(fixture, contractResource), fixture);
@@ -545,7 +553,7 @@ describe('removeInvalidFixtures', () => {
 
             matchWithSchemaStub.withArgs(JSON.parse(fixtureBody), contractActions['POST'].responses[0].schema)
                 .returns({valid: true});
-            matchWithSchemaStub.withArgs(JSON.parse(fixtureBody), contractActions['POST'].request)
+            matchWithSchemaStub.withArgs(JSON.parse(fixtureBody), contractActions['POST'].request.schema)
                 .returns({valid: true});
 
             matchWithSchemaStub.withArgs(JSON.parse(badFixtureBody), contractActions['POST'].responses[0].schema)
@@ -589,7 +597,7 @@ describe('removeInvalidFixtures', () => {
 
             matchWithSchemaStub.withArgs(JSON.parse(fixtureBody), contractActions['POST'].responses[0].schema)
                 .returns({valid: true});
-            matchWithSchemaStub.withArgs(JSON.parse(fixtureBody), contractActions['POST'].request)
+            matchWithSchemaStub.withArgs(JSON.parse(fixtureBody), contractActions['POST'].request.schema)
                 .returns({valid: true});
             assert.deepEqual(contracts.removeInvalidFixtures(fixture, contractResource), expectedResource);
             assert.equal(errorSpy.getCall(0).args[0], 'DELETE /sample-url is not in the contract');
@@ -619,7 +627,7 @@ describe('removeInvalidFixtures', () => {
                 };
 
                 assert.deepEqual(contracts.removeInvalidFixtures(fixture, contractResource), expectedResource);
-                assert.equal(errorSpy.getCall(0).args[0], 'POST /sample-url example[0] request error parsing body\n\tUnexpected token T in JSON at position 0');
+                assert.equal(errorSpy.getCall(0).args[0], 'POST /sample-url example[0] request has the following errors:\n\tError parsing body: Unexpected token T in JSON at position 0');
             });
         });
 
@@ -646,8 +654,11 @@ describe('removeInvalidFixtures', () => {
                 pathParams: {},
                 queryParams: {},
                 request: {
-                    "$schema": "http://json-schema.org/draft-07/schema#",
-                    "type": "object"
+                    headers: [],
+                    schema: {
+                        "$schema": "http://json-schema.org/draft-07/schema#",
+                        "type": "object"
+                    }
                 },
                 responses: [{status: '', schema: ''}]
             }
@@ -777,4 +788,5 @@ describe('removeInvalidFixtures', () => {
             assert.ok(errorSpy.notCalled);
         });
     });
-});
+})
+;

@@ -144,34 +144,34 @@ exports.matchesHeader = function (httpReq, specReq, ignoreHeaders) {
     }
 
     function isValidHeader(specHeader) {
-        const httpReqHeader = specHeader.name.toLowerCase();
-        if (!httpReq.headers.hasOwnProperty(httpReqHeader)) {
+        const headerName = specHeader.name.toLowerCase();
+        if (!httpReq.headers.hasOwnProperty(headerName)) {
             if (specHeader.required) {
-                logger.debug(`Matching by request header: For "${httpReqHeader}" is required but missing ${'NOT_MATCHED'.red}`);
+                logger.debug(`Matching by request header: For "${headerName}" is required but missing ${'NOT_MATCHED'.red}`);
                 return false;
             } else {
-                logger.debug(`Matching by request header: Optional header ${httpReqHeader} omitted`);
+                logger.debug(`Matching by request header: Optional header ${headerName} omitted`);
                 return true;
             }
         }
 
-        const reqValue = httpReq.headers[httpReqHeader];
+        const reqValue = httpReq.headers[headerName];
         if (specHeader.type) {
             if (!types.typeMatches(reqValue, specHeader.type)) {
-                logger.debug(`Matching by request header: For "${httpReqHeader}" expected type "${specHeader.type}" but got value "${reqValue}" ${'NOT_MATCHED'.red}`);
+                logger.debug(`Matching by request header: For "${headerName}" expected type "${specHeader.type}" but got value "${reqValue}" ${'NOT_MATCHED'.red}`);
                 return false;
             } else {
-                logger.debug(`Matching by request header: "${httpReqHeader}" ${'MATCHED'.green}`);
+                logger.debug(`Matching by request header: "${headerName}" ${'MATCHED'.green}`);
                 return true;
             }
         }
 
         if (reqValue !== specHeader.value) {
-            logger.debug(`Matching by request header: For "${httpReqHeader}" expected value "${specHeader.value}" but got value "${reqValue}" ${'NOT_MATCHED'.red}`);
+            logger.debug(`Matching by request header: For "${headerName}" expected value "${specHeader.value}" but got value "${reqValue}" ${'NOT_MATCHED'.red}`);
             return false;
         }
 
-        logger.debug(`Matching by request header: "${httpReqHeader}" ${'MATCHED'.green}`);
+        logger.debug(`Matching by request header: "${headerName}" ${'MATCHED'.green}`);
         return true;
     }
 
