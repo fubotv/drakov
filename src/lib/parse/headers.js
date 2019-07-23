@@ -65,9 +65,10 @@ const compareFixtureAndContractHeaders = (fixtureHeaders: ?Array<HeaderDef>, con
         messages: [],
     };
 
-    const fixtureMap = fixtureHeaders.reduce((previous, current) => {
-        previous[current.name] = current;
-        return previous;
+    // making a map of header name to definition to avoid a nested loop and because it is clearer to use
+    const fixtureMap = fixtureHeaders.reduce((map, item) => {
+        map[item.name] = item;
+        return map;
     }, {});
 
     contractHeaders.forEach(contract => {

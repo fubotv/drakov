@@ -39,7 +39,7 @@ drakov will check that the parameters can be properly coerced into the listed ty
 cause the endpoint to not be found.
 
 ### Header matching
-The original drakov, and indeed the apib format, has no concept of a head variable, but we found this problematic in matching requests and enforcing headers.
+The original drakov, and indeed the apib format, has no concept of a header variable, but we found this problematic in matching requests and enforcing headers.
 The format is based on the MSON format that apib uses: 
 ```
     <header name>: `<example value>` (<type>, required | optional) - <description>
@@ -48,7 +48,7 @@ Headers that have only an example value will be an exact match as drakov has alw
 as long as they are the proper type.
 
 The headers still need to be in a pre-formatted block, with one header per line
-and must **not** have a list item marker (+ or -) in front, unlike parameters. This is to keep enable
+and must **not** have a list item marker (+ or -) in front, unlike parameters. This is to allow
 continued use of the existing parsing library which does not recognize this format.
  
 ### Running fixtures with parameters in validation mode
@@ -60,7 +60,7 @@ must have matching types. Thus the following changes are valid:
 Any fixtures that do not match the requirements of the contract will not be served, with a log message 
 emitted during startup explaining the reason that particular example is excluded.
 
-#### Note on optionality
+### Note on optionality
 For all parameters above, *required is the default optionality*.
 
 ### Endpoint matching priorities
