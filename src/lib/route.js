@@ -40,9 +40,7 @@ exports.getRouteHandlers = function (parsedUrl, action, queryParams) {
                 });
 
                 res.status(+this.response.name);
-                var bdy = buildResponseBody(this.response.body);
-                
-                res.send(bdy);
+                res.send(buildResponseBody(this.response.body));
 
             }
         };
